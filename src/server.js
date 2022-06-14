@@ -5,6 +5,9 @@ const routes = require("./routes");
 // Require the framework and instantiate it
 const fastify = require("fastify")({ logger: true });
 
+// Disable certificate verification
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+
 // Declares routes
 routes.forEach(route => fastify.route(route({ config, services })));
 

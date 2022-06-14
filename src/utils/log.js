@@ -6,7 +6,7 @@ const logConfiguration = {
         new winston.transports.File({
             filename: "logs/api_gateway.log",
         }),
-        new winston.transport.Console()
+        new winston.transports.Console()
     ],
     format: winston.format.combine(
         winston.format.timestamp({

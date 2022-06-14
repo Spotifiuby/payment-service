@@ -1,5 +1,6 @@
 const ethers = require("ethers");
 const getDepositHandler = require("../handlers/getDepositHandler");
+const { logInfo } = require("../utils/log");
 
 const getContract = (config, wallet) => {
   return new ethers.Contract(config.contractAddress, config.contractAbi, wallet);
@@ -43,7 +44,23 @@ const getDepositReceipt = ({}) => async depositTxHash => {
   return deposits[depositTxHash];
 };
 
+const sendMoneyToWallet = ({ config }) => async (receiverAddress, amountSent, deployerWallet) => {
+  return new Promise(async (resolve, reject) => {
+    logInfo("Sending money to wallet with address " + receiverAddress + " from deployer wallet: " + deployerWallet.address);
+    const basicPayments = await getContract(config, deployerWallet);
+
+    logInfo("Signer is " + basicPayments.signer.address);
+
+    amountSent = await ethers.utils.parseEther(amountSent).toHexString();
+    tx = await basicPayments.sendPayment(receiverAddress, amountSent);
+
+    logInfo("Transaction succeed. Tx hash: " + tx.hash);
+    resolve(tx);
+  })
+}
+
 module.exports = dependencies => ({
   deposit: deposit(dependencies),
   getDepositReceipt: getDepositReceipt(dependencies),
+  sendMoneyToWallet: sendMoneyToWallet(dependencies)
 });

@@ -4,7 +4,7 @@ function schema() {
       type: "object",
       properties: {
         id: {
-          type: "integer",
+          type: "string",
         },
       },
     },
@@ -14,8 +14,9 @@ function schema() {
 
 function handler({ walletService }) {
   return async function (req, reply) {
-    const body = await walletService.getWalletData(req.params.id);
-    reply.code(200).send(body);
+    await walletService.getWallet(req.params.id)
+      .then(wallet => reply.code(200).send(wallet))
+      .catch(err => reply.code(400).send(err));
   };
 }
 
