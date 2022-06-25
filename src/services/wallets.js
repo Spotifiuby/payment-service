@@ -59,6 +59,10 @@ const getUserWallet = userId => new Promise((resolve, reject) => {
     if (err) {
       return reject(err);
     } else {
+      if (res.rows.length < 1) {
+        logInfo("No wallet found for user " + userId);
+        return reject(new Error("No wallet found for user " + userId));
+      }
       logInfo("Wallet retrieved for user " + userId + " with address " + res.rows[0]['wallet_address']);
       return resolve(res);
     }
