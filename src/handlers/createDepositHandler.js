@@ -33,7 +33,7 @@ function handler({ contractInteraction, walletService, suscriptionService }) {
           tx = await contractInteraction.deposit(senderWallet, req.body.amountInEthers);
         } catch (err) {
           logError("Transaction failed with error " + err.message + " for user " + req.body.senderId);
-          reply.code(400).send(err.message)
+          reply.code(400).send(err)
         }
         logInfo("Transaction succeed!")
         reply.code(201).send(tx);
